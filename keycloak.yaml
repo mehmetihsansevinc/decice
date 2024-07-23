@@ -7,10 +7,10 @@ metadata:
     app: keycloak
 spec:
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
-      nodePort: 31784
+    - name: https
+      port: 8443
+      targetPort: 8443
+      nodePort: 31785
   selector:
     app: keycloak
   type: NodePort
@@ -43,10 +43,24 @@ spec:
               value: "admin"
             - name: KC_PROXY
               value: "edge"
+            - name: KC_HTTPS_CERTIFICATE_FILE
+              value: "/etc/x509/https/tls.crt"
+            - name: KC_HTTPS_CERTIFICATE_KEY_FILE
+              value: "/etc/x509/https/tls.key"
           ports:
-            - name: http
-              containerPort: 8080
+            - name: https
+              containerPort: 8443
           readinessProbe:
             httpGet:
               path: /realms/master
-              port: 8080
+              port: 8443
+              scheme: HTTPS
+          volumeMounts:
+            - name: tls-secret
+              mountPath: /etc/x509/https
+              readOnly: true
+      volumes:
+        - name: tls-secret
+          secret:
+            secretName: keycloak-tls-secret
+

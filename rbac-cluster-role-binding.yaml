@@ -1,0 +1,13 @@
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: decice-cluster-role-binding
+  namespace: decice
+subjects:
+- kind: User      # Here we say it's a normal user and not a service account
+  name: decice  # Here is where we define the user we created and defined in the context
+  apiGroup: ""
+roleRef:
+  kind: ClusterRole
+  name: decice-cluster-role
+  apiGroup: ""

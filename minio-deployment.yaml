@@ -36,7 +36,8 @@ spec:
       volumes:
       - name: localvolume
         hostPath:
-          path: /var/local/data
+         #Here should be changed
+          path: /home/msevinc/minio/data
           type: DirectoryOrCreate
 ---
 apiVersion: v1

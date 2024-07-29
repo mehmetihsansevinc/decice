@@ -16,7 +16,7 @@ for ip in $ip_list; do
 done
 
 # Add additional fixed IP if needed
-subject_alt_name+=",IP:141.2.112.17"
+subject_alt_name+=",IP:141.2.112.17,IP:10.233.55.68"
 
 # Run the OpenSSL command with the constructed subjectAltName
 openssl req -newkey rsa:4096 -nodes -sha256 -keyout /home/msevinc/registry/registry.key -addext "$subject_alt_name" -x509 -days 3650 -out /home/msevinc/registry/registry.crt -subj "/C=/ST=/L=/O=/OU=/CN="

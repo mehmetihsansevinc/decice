@@ -19,8 +19,4 @@ done
 subject_alt_name+=",IP:141.2.112.17"
 
 # Run the OpenSSL command with the constructed subjectAltName
-openssl req \
-  -newkey rsa:4096 -nodes -sha256 -keyout /home/msevinc/registry/registry.key \
-  -addext "$subject_alt_name" \
-  -x509 -days 3650 -out /home/msevinc/registry/registry.crt \
-  -subj "/C=/ST=/L=/O=/OU=/CN="
+openssl req -newkey rsa:4096 -nodes -sha256 -keyout /home/msevinc/registry/registry.key -addext "$subject_alt_name" -x509 -days 3650 -out /home/msevinc/registry/registry.crt -subj "/C=/ST=/L=/O=/OU=/CN="

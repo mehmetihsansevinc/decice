@@ -1,7 +1,7 @@
 curl -s https://raw.githubusercontent.com/mehmetihsansevinc/decice/main/registry-cert.sh | sh
 kubectl create ns registry
 kubectl create secret tls registry-cert --cert=/home/msevinc/registry/registry.crt --key=/home/msevinc/registry/registry.key -n registry
-kubectl apply -f registry-deployment.yaml
+kubectl apply -f https://raw.githubusercontent.com/mehmetihsansevinc/decice/main/registry-deployment.yaml
 
 
 We need authorized certificate. Self signed certificate leads to:

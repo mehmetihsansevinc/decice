@@ -13,7 +13,8 @@ We need authorized certificate. Self signed certificate leads to:
                            More details here: https://curl.haxx.se/docs/sslcerts.html
 Because of that we used "--tls-verify=false"
 
-curl --cacert /home/msevinc/registry/registry.crt https://10.211.55.250:5000/v2/_catalog
+[msevinc@cn03 registry]$ curl --cacert /home/msevinc/registry/registry.crt https://10.233.55.68:5000/v2/_catalog
+curl: (35) SSL: couldn't get X509-issuer name!
 
 sudo docker pull alpine
 sudo docker tag alpine 10.233.55.68:5000/alpine:latest

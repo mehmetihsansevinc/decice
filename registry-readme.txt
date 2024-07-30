@@ -26,6 +26,7 @@ subjectAltName = DNS:registry-test.com, IP:10.233.55.68
 keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 
+================
 
 # Generate Private Key
 openssl genpkey -algorithm RSA -out registry.key -pkeyopt rsa_keygen_bits:2048
@@ -47,6 +48,22 @@ kubectl create secret tls registry-cert --cert=/home/msevinc/registry/registry.c
 kubectl create secret docker-registry registry-credential --docker-server=10.233.55.68:5000 --docker-username=mehmet --docker-password=Mehmet123 --docker-email="m.ihsansevinc@gmail.com" --namespace=registry
 kubectl apply -f https://raw.githubusercontent.com/mehmetihsansevinc/decice/main/registry-deployment-with-credentials.yaml
 
+
+[msevinc@cn03 10.233.55.68:5000]$ kubectl get all -n registry
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/registry-744846f877-mtxlx   1/1     Running   0          52m
+pod/registry-744846f877-tdvx7   1/1     Running   0          52m
+
+NAME                       TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/registry-service   ClusterIP   10.233.55.68   <none>        5000/TCP   52m
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/registry   2/2     2            2           52m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/registry-744846f877   2         2         2       52m
+
+================
 
 [msevinc@cn03 registry]$ curl --cacert /home/msevinc/registry/registry.crt https://10.233.55.68:5000/v2/_catalog
 {"repositories":["alpine"]}

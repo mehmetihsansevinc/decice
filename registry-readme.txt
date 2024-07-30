@@ -59,4 +59,16 @@ To verify:
 openssl x509 -in registry.crt -noout -text | grep -A 1 "Subject:"
 openssl x509 -in registry.crt -noout -text | grep -A 1 "Subject Alternative Name:"
 
+==================
+
+[msevinc@cn03 registry]$ docker login 10.233.55.68:5000
+Username: mehmet
+Password:
+WARNING! Your password will be stored unencrypted in /home/msevinc/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[msevinc@cn03 registry]$
+
 

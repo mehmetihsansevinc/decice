@@ -2,7 +2,7 @@ curl -s https://raw.githubusercontent.com/mehmetihsansevinc/decice/main/registry
 kubectl create ns registry
 kubectl create secret tls registry-cert --cert=/home/msevinc/registry/registry.crt --key=/home/msevinc/registry/registry.key -n registry
 kubectl create secret docker-registry registry-credential --docker-server=10.233.55.68:5000 --docker-username=mehmet --docker-password=Mehmet123 --docker-email="m.ihsansevinc@gmail.com" --namespace=registry
-kubectl apply -f registry-deployment-with-credentials.yaml
+kubectl apply -f https://raw.githubusercontent.com/mehmetihsansevinc/decice/main/registry-deployment-with-credentials.yaml
 
 
 We need authorized certificate. Self signed certificate leads to:

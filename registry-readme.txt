@@ -45,25 +45,18 @@ subjectAltName = DNS:registry-test.com, IP:10.233.55.68
 keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
 
-- openssl req -new -x509 -days 365 -nodes -out registry.crt -keyout registry.key -config openssl.cnf
 
-To verify but we have problem in here. there is no SAN i see:
-[msevinc@cn03 registry]$ openssl x509 -in registry.crt -noout -text | grep -A 1 "Subject:"
-        Subject: C = CN, ST = Beijing, L = Beijing, O = Huawei, CN = 10.233.55.68
-        Subject Public Key Info:
-[msevinc@cn03 registry]$
-[msevinc@cn03 registry]$ openssl x509 -in registry.crt -noout -text | grep -A 1 "Subject Alternative Name:"
-[msevinc@cn03 registry]$
+# Generate Private Key
+openssl genpkey -algorithm RSA -out registry.key -pkeyopt rsa_keygen_bits:2048
 
-Because of that:
-sudo docker pull alpine
-sudo docker tag alpine 10.233.55.68:5000/alpine:latest
-sudo docker push 10.233.55.68:5000/alpine:latest --tls-verify=false
-curl -k https://10.233.55.68:5000/v2/_catalog
+# Generate CSR
+openssl req -new -key registry.key -out registry.csr -subj "/C=CN/ST=Beijing/L=Beijing/O=Huawei/CN=10.233.55.68" -addext "subjectAltName=DNS:registry-test.com,IP:10.233.55.68"
 
-[msevinc@cn03 registry]$ sudo docker push 10.233.55.68:5000/alpine:latest
-The push refers to repository [10.233.55.68:5000/alpine]
-9110f7b5208f: Retrying in 2 seconds
+# Generate self-signed certificate
+openssl x509 -req -in registry.csr -signkey registry.key -out registry.crt -days 365 -extfile openssl.cnf -extensions req_ext
 
+To verify:
+openssl x509 -in registry.crt -noout -text | grep -A 1 "Subject:"
+openssl x509 -in registry.crt -noout -text | grep -A 1 "Subject Alternative Name:"
 
 

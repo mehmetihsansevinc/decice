@@ -76,3 +76,15 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 [msevinc@cn03 registry]$
 
+==================
+
+The problem that we are facing is about a self signed certificate.
+Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  26s                default-scheduler  Successfully assigned registry/alpine-test to cn03
+  Normal   BackOff    25s                kubelet            Back-off pulling image "10.233.55.68:5000/alpine:latest"
+  Warning  Failed     25s                kubelet            Error: ImagePullBackOff
+  Normal   Pulling    12s (x2 over 26s)  kubelet            Pulling image "10.233.55.68:5000/alpine:latest"
+  Warning  Failed     12s (x2 over 26s)  kubelet            Failed to pull image "10.233.55.68:5000/alpine:latest": rpc error: code = Unknown desc = failed to pull and unpack image "10.233.55.68:5000/alpine:latest": failed to resolve reference "10.233.55.68:5000/alpine:latest": failed to do request: Head "https://10.233.55.68:5000/v2/alpine/manifests/latest": tls: failed to verify certificate: x509: certificate signed by unknown authority
+  Warning  Failed     12s (x2 over 26s)  kubelet            Error: ErrImagePull

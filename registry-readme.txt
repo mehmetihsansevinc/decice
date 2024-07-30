@@ -35,25 +35,23 @@ distinguished_name  = req_distinguished_name
 req_extensions      = req_ext
 
 [ req_distinguished_name ]
-countryName                 = Country Name (2 letter code)
-countryName_default         = US
-stateOrProvinceName         = State or Province Name (full name)
-stateOrProvinceName_default = California
-localityName                = Locality Name (eg, city)
-localityName_default        = San Francisco
-organizationName            = Organization Name (eg, company)
-organizationName_default    = My Company
-commonName                  = Common Name (e.g. server FQDN or YOUR name)
+countryName                 = China
+countryName_default         = CN
+stateOrProvinceName         = Pekin
+stateOrProvinceName_default = Pekin
+localityName                = Pekin
+localityName_default        = Pekin
+organizationName            = Huawei
+organizationName_default    = Huawei
+commonName                  = registry-test.com
 commonName_max              = 64
 
 [ req_ext ]
 subjectAltName = @alt_names
 
 [ alt_names ]
-IP.1 = 192.168.23.13
-IP.2 = 192.168.23.18
-IP.3 = 141.2.112.17
-IP.4 = 10.233.55.68
+IP.1 = 10.233.55.68
+IP.2 = 141.2.112.17
 
 - openssl req -new -x509 -days 365 -nodes -out registry.crt -keyout registry.key -config openssl.cnf
 

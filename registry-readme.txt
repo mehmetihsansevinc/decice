@@ -36,15 +36,16 @@ distinguished_name  = req_distinguished_name
 req_extensions      = req_ext
 
 [ req_distinguished_name ]
-countryName                 = China
+countryName                 = CN
 countryName_default         = CN
-stateOrProvinceName         = Pekin
-stateOrProvinceName_default = Pekin
-localityName                = Pekin
-localityName_default        = Pekin
+stateOrProvinceName         = Beijing
+stateOrProvinceName_default = Beijing
+localityName                = Beijing
+localityName_default        = Beijing
 organizationName            = Huawei
 organizationName_default    = Huawei
-commonName                  = registry-test.com
+commonName                  = 10.233.55.68
+commonName_default          = 10.233.55.68
 commonName_max              = 64
 
 [ req_ext ]
@@ -53,6 +54,7 @@ subjectAltName = @alt_names
 [ alt_names ]
 IP.1 = 10.233.55.68
 IP.2 = 141.2.112.17
+DNS.1 = registry-test.com
 
 - openssl req -new -x509 -days 365 -nodes -out registry.crt -keyout registry.key -config openssl.cnf
 

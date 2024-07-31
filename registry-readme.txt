@@ -105,3 +105,23 @@ Events:
   Normal   Pulling    12s (x2 over 26s)  kubelet            Pulling image "10.233.55.68:5000/alpine:latest"
   Warning  Failed     12s (x2 over 26s)  kubelet            Failed to pull image "10.233.55.68:5000/alpine:latest": rpc error: code = Unknown desc = failed to pull and unpack image "10.233.55.68:5000/alpine:latest": failed to resolve reference "10.233.55.68:5000/alpine:latest": failed to do request: Head "https://10.233.55.68:5000/v2/alpine/manifests/latest": tls: failed to verify certificate: x509: certificate signed by unknown authority
   Warning  Failed     12s (x2 over 26s)  kubelet            Error: ErrImagePull
+
+
+[msevinc@cn03 registry]$ sudo docker push 10.233.55.68:5000/nginx:latest
+The push refers to repository [10.233.55.68:5000/nginx]
+eafc6949fd76: Pushing [==================================================>]  7.168kB
+43968a0056df: Layer already exists
+75a823baa0a4: Pushed
+0883bbc807e8: Layer already exists
+6ad832e35023: Pushed
+79c99d84246d: Pushing [=>                                                 ]  2.749MB/95.88MB
+58007152def9: Pushing [=>                                                 ]  3.236MB/97.11MB
+blob upload unknown
+[msevinc@cn03 registry]$
+[msevinc@cn03 registry]$ curl --cacert registry.crt https://10.233.55.68:5000/v2/_catalog
+{"repositories":["alpine","nginx"]}
+[msevinc@cn03 registry]$
+
+
+
+

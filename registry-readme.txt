@@ -122,6 +122,65 @@ blob upload unknown
 {"repositories":["alpine","nginx"]}
 [msevinc@cn03 registry]$
 
+============================================================================================================================================================================================================================
+============================================================================================================================================================================================================================
+========================================================================================================================================================================================================================================================================================================================================================================================================================================================
+============================================================================================================================================================================================================================
+============================================================================================================================================================================================================================
+
+Below aexample refers to 
+[msevinc@cn03 pv]$ ll
+total 20
+-rw-r--r--. 1 root root 189 Aug  2 12:29 pvc-test.yaml
+-rw-r--r--. 1 root root 339 Aug  2 13:01 pv-pod-test.yaml
+-rw-r--r--. 1 root root 220 Aug  2 12:29 pv-test.yaml
+drwxrwxr-x. 3 root root  28 Aug  2 12:59 registry
+-rw-r--r--. 1 root root 232 Aug  2 12:51 svc-registry.yaml
+-rw-r--r--. 1 root root 593 Aug  2 12:50 test-registry.yaml
+
+
+
+[msevinc@cn03 pv]$ sudo docker pull 10.233.29.160:5000/alpine:latest
+latest: Pulling from alpine
+Digest: sha256:24ba417e25e780ff13c888ccb1badec5b027944666ff695681909bafe09a3944
+Status: Image is up to date for 10.233.29.160:5000/alpine:latest
+10.233.29.160:5000/alpine:latest
+
+
+[msevinc@cn03 pv]$ sudo docker push 10.233.29.160:5000/alpine:latest
+The push refers to repository [10.233.29.160:5000/alpine]
+9110f7b5208f: Pushing [==================================================>] 
+latest: digest: sha256:24ba417e25e780ff13c888ccb1badec5b027944666ff695681909bafe09a3944 size: 528
+
+
+[msevinc@cn03 pv]$ curl http://192.168.23.13:32766/v2/_catalog
+{"repositories":["alpine"]}
+
+
+[msevinc@cn03 pv]$ kubectl get all
+NAME                            READY   STATUS         RESTARTS   AGE
+pod/my-pod                      0/1     ErrImagePull   0          3s
+pod/registry-6b8c96679f-pblvw   1/1     Running        0          24m
+
+NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/kubernetes         ClusterIP   10.233.0.1      <none>        443/TCP          4d7h
+service/registry-service   NodePort    10.233.29.160   <none>        5000:32766/TCP   23m
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/registry   1/1     1            1           24m
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/registry-6b8c96679f   1         1         1       24m
+
+
+[msevinc@cn03 pv]$ kubectl logs my-pod
+Error from server (BadRequest): container "my-container" in pod "my-pod" is waiting to start: image can't be pulled
+
+
+
+
+
+
 
 
 

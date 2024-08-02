@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: my-container
+      image: 10.233.29.160:5000/alpine:latest
+      volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: hostpath-storage
+  volumes:
+    - name: hostpath-storage
+      persistentVolumeClaim:
+        claimName: hostpath-pvc

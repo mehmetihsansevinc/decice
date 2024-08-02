@@ -1,2 +1,2 @@
 # DECICE
-Here is the KubeSpray files of DECICE cluster.
+Here are the KubeSpray files of DECICE cluster.

@@ -51,5 +51,6 @@ spec:
     app: minio
   ports:
     - protocol: TCP
+      nodePort: 31773
       port: 9001
       targetPort: 9001

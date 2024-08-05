@@ -75,5 +75,6 @@ spec:
     app: mosquitto
   type: NodePort
   ports:
-  - port: 1883
+  - nodePort: 31441
+    port: 1883
     targetPort: 1883

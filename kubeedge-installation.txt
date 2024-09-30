@@ -1,4 +1,9 @@
 
+In decie-spray repository, the playbooks are present. You just need to run:
+- source /home/msevinc/ansible-git/ansible-venv/bin/activate
+- ansible-playbook -i inventory/decice-mehmet/hosts.yaml --become --become-user=root -u msevinc cluster.yml
+- ansible-playbook -i "192.168.23.13," --become --become-user=root -u msevinc playbooks/kubeedge-edgecore-install.yaml
+
 ###---On Master---###
 - export KUBECONFIG=/etc/kubernetes/admin.conf
 - mkdir -p /home/msevinc/kubeedge

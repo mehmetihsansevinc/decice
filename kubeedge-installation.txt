@@ -1,0 +1,122 @@
+
+###---On Master---###
+- export KUBECONFIG=/etc/kubernetes/admin.conf
+- mkdir -p /home/msevinc/kubeedge
+- sudo wget https://github.com/kubeedge/kubeedge/releases/download/v1.18.0/keadm-v1.18.0-linux-arm64.tar.gz -P /home/msevinc/kubeedge/
+- sudo tar -zxvf /home/msevinc/kubeedge/keadm-v1.18.0-linux-arm64.tar.gz -C /home/msevinc/kubeedge/
+- sudo cp /home/msevinc/kubeedge/keadm-v1.18.0-linux-arm64/keadm/keadm /usr/local/bin
+
+
+- sudo chmod +r /root/.kube/config
+- sudo cp /root/.kube/config /home/msevinc/.kube/config
+- sudo chown msevinc:msevinc /home/msevinc/.kube/config
+- sudo chown msevinc:msevinc /home/msevinc/kubeedge
+- sudo chown msevinc:msevinc /root/.kube/config
+- sudo ln -s /usr/bin/dnf /usr/bin/yum
+- sed -i 's|server: https://127.0.0.1:6443|server: https://192.168.23.11:6443|' /home/msevinc/.kube/config
+- keadm init --advertise-address="192.168.23.11" --profile version=v1.12.1 --kube-config=/home/msevinc/.kube/config
+- keadm gettoken --kube-config=/home/msevinc/.kube/config > /home/msevinc/kubeedge/token
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/devices/devices_v1beta1_device.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/devices/devices_v1beta1_devicemodel.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/reliablesyncs/cluster_objectsync_v1alpha1.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/reliablesyncs/objectsync_v1alpha1.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/router/router_v1_ruleEndpoint.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/router/router_v1_rule.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/apps/apps_v1alpha1_edgeapplication.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/apps/apps_v1alpha1_nodegroup.yaml
+- kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/operations/operations_v1alpha1_nodeupgradejob.yaml
+
+Patch the service to NodePort:
+kubectl patch service cloudcore -n kubeedge -p '{
+  "spec": {
+    "type": "NodePort",
+    "ports": [
+      {
+        "port": 10000,
+        "protocol": "TCP",
+        "targetPort": 10000,
+        "nodePort": 31733
+      },
+      {
+        "port": 10001,
+        "protocol": "UDP",
+        "targetPort": 10001,
+        "nodePort": 32099
+      },
+      {
+        "port": 10002,
+        "protocol": "TCP",
+        "targetPort": 10002,
+        "nodePort": 31508
+      },
+      {
+        "port": 10003,
+        "protocol": "TCP",
+        "targetPort": 10003,
+        "nodePort": 31680
+      },
+      {
+        "port": 10004,
+        "protocol": "TCP",
+        "targetPort": 10004,
+        "nodePort": 30979
+      }
+    ]
+  }
+}' 
+
+
+
+
+Delete the current flannel and apply the edited one
+- kubectl delete daemonsets.apps -n kube-system kube-flannel-ds-arm64
+- wget https://raw.githubusercontent.com/mehmetihsansevinc/decice/refs/heads/main/flannel-edge-access.yaml -P /home/msevinc/kubeedge/
+- kubectl apply -f /home/msevinc/kubeedge/flannel-edge-access.yaml
+
+==============================================================================================================================
+
+###---On Edge CN03 Host---###
+
+- wget https://github.com/kubeedge/kubeedge/releases/download/v1.18.0/kubeedge-v1.18.0-linux-arm64.tar.gz -P /home/msevinc/kubeedge/
+- sudo tar -zxvf /home/msevinc/kubeedge/kubeedge-v1.18.0-linux-arm64.tar.gz -C /home/msevinc/kubeedge/
+- sudo cp /home/msevinc/kubeedge/kubeedge-v1.18.0-linux-arm64/edge/edgecore /usr/local/bin/edgecore
+
+
+extract cni targz on all nodes and " cp * /opt/cni/bin"
+- sudo mkdir -p /opt/cni/bin/
+- sudo tar zxvf /home/msevinc/cni-plugins-linux-arm64-v1.3.0.tgz -C /opt/cni/bin
+
+copy cni binaries to related path check crio /usr/libexec/cni/ ,  /etc/crio/crio.conf  edit to look at /opt/cni/bin
+- sudo sed -i 's|/usr/libexec/cni/|/opt/cni/bin|' /etc/crio/crio.conf
+- sudo mkdir -p /usr/libexec/bin/
+- sudo cp /opt/cni/bin/* /usr/libexec/bin/
+
+
+Create the /home/msevinc/kubeedge/edgecore.yaml
+- wget https://raw.githubusercontent.com/mehmetihsansevinc/decice/refs/heads/main/edgecore.yaml -P /home/msevinc/kubeedge/
+
+
+- export TOKEN=$(cat /home/msevinc/kubeedge/token)
+- sed -i "s/token: \"\"/token: \"$(cat /home/msevinc/kubeedge/token)\"/" /home/msevinc/kubeedge/edgecore.yaml
+
+
+Create an edgecore.service file under /etc/systemd/system/edgecore.service
+sudo bash -c 'cat <<EOF > /etc/systemd/system/edgecore.service
+[Unit]
+Description=edgecore.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/edgecore --config /home/msevinc/kubeedge/edgecore.yaml
+Environment="CHECK_EDGECORE_ENVIRONMENT=false"
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF'
+
+Start the services
+	- sudo systemctl daemon-reload
+	- sudo systemctl restart crio
+	- sudo service edgecore start

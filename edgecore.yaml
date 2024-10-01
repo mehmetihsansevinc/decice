@@ -5,6 +5,8 @@ database:
   driverName: sqlite3
 kind: EdgeCore
 modules:
+  edgeMesh:
+    enable: false
   dbTest:
     enable: false
   deviceTwin:
@@ -155,7 +157,7 @@ modules:
     metaServer:
       apiAudiences: null
       dummyServer: 169.254.30.10:10550
-      enable: false
+      enable: true
       server: 127.0.0.1:10550
       serviceAccountIssuers:
       - https://kubernetes.default.svc.cluster.local

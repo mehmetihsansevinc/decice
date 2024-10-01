@@ -19,7 +19,7 @@ In decie-spray repository, the playbooks are present. You just need to run:
 - sudo chown msevinc:msevinc /root/.kube/config
 - sudo ln -s /usr/bin/dnf /usr/bin/yum
 - sed -i 's|server: https://127.0.0.1:6443|server: https://192.168.23.11:6443|' /home/msevinc/.kube/config
-- keadm init --advertise-address="192.168.23.11" --profile version=v1.12.1 --kube-config=/home/msevinc/.kube/config
+- keadm init --advertise-address="192.168.23.11" --profile version=v1.12.1 --kube-config=/home/msevinc/.kube/config --set cloudCore.modules.dynamicController.enable=true
 - keadm gettoken --kube-config=/home/msevinc/.kube/config > /home/msevinc/kubeedge/token
 - kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/devices/devices_v1beta1_device.yaml
 - kubectl apply -f https://raw.githubusercontent.com/kubeedge/kubeedge/master/build/crds/devices/devices_v1beta1_devicemodel.yaml

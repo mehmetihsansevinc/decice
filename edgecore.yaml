@@ -60,7 +60,8 @@ modules:
       address: 192.168.23.13
       cgroupDriver: systemd
       cgroupsPerQOS: true
-      clusterDNS: 169.254.96.16
+      clusterDNS:
+      - 169.254.96.16
       clusterDomain: cluster.local
       configMapAndSecretChangeDetectionStrategy: Get
       containerLogMaxFiles: 5
